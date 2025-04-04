@@ -10,7 +10,7 @@ export default function AdminButton() {
   return (
     <Button
       variant="outline"
-      className="bg-white text-custom-green hover:bg-black-100"
+      className="bg-white max-sm:w-full text-custom-green hover:bg-black-100 h-11 py-4"
       onClick={handleAdminClick}
     >
       Panel de Administrador

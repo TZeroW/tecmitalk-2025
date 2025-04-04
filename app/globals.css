@@ -72,11 +72,110 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --container-max-width: 1440px;
+    --grid-gap: 1.5rem;
+    --grid-columns: 3;
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --spacing-unit: 0.5rem;
+  }
+
   * {
     @apply border-border;
+    border-radius: 0 !important;
+    font-family: var(--font-sans);
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    @apply mx-auto px-4;
+    max-width: var(--container-max-width);
+  }
+
+  .grid-system {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  }
+
+  .col-span-main {
+    grid-column: 1 / -1;
+  }
+
+  .col-span-content {
+    grid-column: 2 / span 10;
+  }
+
+  .section-gap {
+    @apply py-20 lg:py-32;
+  }
+
+  .card {
+    @apply border-2 border-solid border-gray-200 shadow-md;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+    border-radius: 0 !important;
+    margin-left: calc(var(--grid-gap) * -1);
+    margin-right: calc(var(--grid-gap) * -1);
+  }
+
+  .card:hover {
+    @apply border-gray-300 shadow-lg;
+    transform: translateY(-2px) scale(1.01);
+    opacity: 0.95;
+  }
+
+  .btn {
+    @apply rounded-none border-2 border-solid transition-all;
+    border-radius: 0 !important;
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+    min-width: 240px;
+    justify-content: center;
+  }
+
+  .btn:hover {
+    @apply brightness-95;
+    transform: translateY(-1px);
+  }
+
+  .section {
+    @apply border-t-2 border-b-2 border-gray-100 py-16;
+    border-radius: 0 !important;
+  }
+
+  .grid-system {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      @apply px-8;
+    }
+  }
+}
+
+@layer utilities {
+  .flow > * + * {
+    margin-top: var(--spacing-unit);
+  }
+
+  .content-auto {
+    content-visibility: auto;
+  }
+
+  .shadow-outline {
+    box-shadow: 0 0 0 3px hsl(var(--ring));
   }
 }

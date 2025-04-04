@@ -6,7 +6,7 @@ export default function Footer() {
        <footer className="bg-[#14095D] text-white py-8">
        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
          <div className="flex flex-col md:flex-row justify-between items-center">
-           <div className="flex items-center mb-6 md:mb-0">
+           <div className="flex flex-col lg:flex-row items-center mb-6 md:mb-0">
              <Image
                src="logo_sin_fondo.png" 
                alt="TECMITALK" 
@@ -45,9 +45,9 @@ export default function Footer() {
            </div>
          </div>
          
-         <div className="mt-8 pt-8 border-t border-white/10 text-center">
+         {/* <div className="mt-8 pt-8 border-t border-white/10 text-center">
            <p className="text-sm font-medium">Creado con ❤️ por <a href="https://bysmax.com" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-tecmitalk-accent">bysmax</a>: María Fernanda, Emmanuel, Valeria y Gerson</p>
-         </div>
+         </div> */}
        </div>
      </footer>
   )

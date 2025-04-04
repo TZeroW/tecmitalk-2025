@@ -19,46 +19,24 @@ export default function EventTicket({
 }: EventTicketProps) {
   return (
     <div className="relative w-full max-w-md mx-auto">
-      <Card className="overflow-hidden border-0 shadow-lg flex flex-col sm:flex-row w-full">
-        <div className="bg-[#004d40] text-white p-3 sm:p-4 md:p-6 flex-grow">
+      <Card className="overflow-hidden border-0 shadow-2xl rounded-2xl group hover:shadow-3xl transition-shadow duration-300">
+        <div className="bg-gradient-to-br from-[#004d40] to-[#00251a] p-6 md:p-8 flex-grow space-y-6">
           <div className="flex justify-between items-start">
-            <div className="w-full">
-              <h3 className="text-xs sm:text-sm font-medium mb-1">#leadyourpath</h3>
-              <div className="mb-4 sm:mb-6 md:mb-8">
-                <Image 
-                  src="/tecmitalk-logo.svg" 
-                  alt="TECMITALK" 
-                  width={300} 
-                  height={80} 
-                  className="w-full max-w-[200px] sm:max-w-[250px] md:max-w-[300px]" 
-                  priority
-                />
-              </div>
+            <h3 className="text-xs font-medium text-tecmitalk-accent/90 tracking-[0.15em]">#leadyourpath</h3>
+            <div className="bg-gradient-to-r from-tecmitalk-accent to-emerald-400 rounded-full px-4 py-1 text-xs font-medium text-white">
+              EARLY BIRD
             </div>
           </div>
-          
-          <div className="mt-2 sm:mt-auto space-y-2 flex flex-wrap">
-            <div className="inline-block border border-white/30 rounded-full px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm mr-1 mb-1">
-              {date}
-            </div>
-            <div className="inline-block border border-white/30 rounded-full px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm mr-1 mb-1">
-              {time}
-            </div>
-            <div className="inline-block border border-white/30 rounded-full px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm mb-1">
-              {location}
-            </div>
-          </div>
-          
-          <div className="mt-3 sm:mt-4 md:mt-6 flex items-center justify-between sm:justify-start sm:space-x-2 md:space-x-4">
-            <div className="w-16 sm:w-20 md:w-24">
-              <Image src="/logo.png" alt="FETECMI" width={80} height={30} className="w-full" />
-            </div>
-            <div className="w-16 sm:w-20 md:w-24">
-              <Image src="/logo.png" alt="TECMILENIO" width={80} height={30} className="w-full" />
-            </div>
-            <div className="w-16 sm:w-20 md:w-24">
-              <Image src="/logo.png" alt="VIVE" width={80} height={30} className="w-full" />
-            </div>
+
+          <div className="mb-8 transition-transform duration-300 group-hover:scale-95">
+            <Image 
+              src="/tecmitalk-logo.svg"
+              className="w-full max-w-[280px] mx-auto opacity-90 hover:opacity-100 transition-opacity"
+              alt="TECMITALK" 
+              width={300} 
+              height={80} 
+              priority
+            />
           </div>
         </div>
         
