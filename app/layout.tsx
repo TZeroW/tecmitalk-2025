@@ -11,20 +11,20 @@ export const metadata: Metadata = {
   title: 'TecmiTalk Campus San Nicolás',
   description: '29 de Abril del 2025',
   openGraph: {
-    title: 'Feria del Empleo Tecmilenio',
+    title: 'TecmiTalk Campus San Nicolás',
     description: 'Registra tus datos para participar en nuestra rifa y ganar un premio',
     images: [{
-      url: 'https://tecmitalk.bysmax.com/4.svg',
+      url: 'https://tecmitalk.bysmax.com/compratusboletos.png',
       width: 1200,
       height: 630,
-      alt: 'Feria del Empleo Tecmilenio',
+      alt: 'TecmiTalk Campus San Nicolás',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Feria del Empleo Tecmilenio',
+    title: 'TecmiTalk Campus San Nicolás',
     description: 'Registra tus datos para participar en nuestra rifa y ganar un premio',
-    images: ['https://tecmitalk.bysmax.com/4.svg'],
+    images: ['https://tecmitalk.bysmax.com/compratusboletos.png'],
   },
 };
 
