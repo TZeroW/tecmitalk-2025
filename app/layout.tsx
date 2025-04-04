@@ -8,13 +8,13 @@ import Header from '@/components/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Feria de Empleo Tecmilenio Campus San Nicolás',
-  description: 'Registra tus datos para participar en nuestra rifa y ganar un premio',
+  title: 'TecmiTalk Campus San Nicolás',
+  description: '29 de Abril del 2025',
   openGraph: {
     title: 'Feria del Empleo Tecmilenio',
     description: 'Registra tus datos para participar en nuestra rifa y ganar un premio',
     images: [{
-      url: 'https://tecmi-rifa.vercel.app/feria.jpg',
+      url: 'https://tecmitalk.bysmax.com/4.svg',
       width: 1200,
       height: 630,
       alt: 'Feria del Empleo Tecmilenio',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Feria del Empleo Tecmilenio',
     description: 'Registra tus datos para participar en nuestra rifa y ganar un premio',
-    images: ['https://tecmi-rifa.vercel.app/feria.jpg'],
+    images: ['https://tecmitalk.bysmax.com/4.svg'],
   },
 };
 
