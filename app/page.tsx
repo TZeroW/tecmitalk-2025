@@ -1,9 +1,11 @@
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import Link from 'next/link';
-import AdminButton from '@/components/AdminButton';
-import EventTicket from '@/components/EventTicket';
-import TicketsCarousel from '@/components/TicketsCarousel';
+'use client'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import Link from 'next/link'
+import AdminButton from '@/components/AdminButton'
+import EventTicket from '@/components/EventTicket'
+import TicketsCarousel from '@/components/TicketsCarousel'
 
 export default function Home() {
   const speakers = [
@@ -22,7 +24,7 @@ export default function Home() {
       name: "Ana Delia García",
       image: "3.svg"
     }
-  ];
+  ]
 
   return (
     <div className="min-h-screen flex flex-col bg-[#14095D] bg-opacity-95">
@@ -34,17 +36,16 @@ export default function Home() {
               <div className="space-y-6">
                 <h2 className="text-sm font-medium text-tecmitalk-accent mb-4 tracking-[0.2em]">#LEADYOURPATH</h2>
                 <h1 className="text-5xl md:text-6xl font-bold text-white leading-[1.15] tracking-tight">
-                  El evento tecnológico
+                  El evento
                   <span className="bg-gradient-to-r from-tecmitalk-accent to-emerald-400 bg-clip-text text-transparent"> más importante del año</span>
                 </h1>
               </div>
 
               <p className="text-xl text-gray-200/90 leading-relaxed max-w-2xl">
-                Descubre las tendencias que están transformando la industria a través de experiencias inmersivas y networking de calidad.
+                Un espacio diseñado para inspirar, aprender y conectar con personas que buscan generar un impacto en sus industrias y en la sociedad.
               </p>
 
               <div className="flex flex-wrap gap-3">
-                {/* Info Badges - Updated styling */}
                 <div className="inline-flex items-center border border-white/20 rounded-xl px-5 py-3 text-white/90 backdrop-blur-sm hover:bg-white/5 transition-colors">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -73,7 +74,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Why Attend Section - Modernized */}
+        {/* Why Attend Section */}
         <section className="bg-white/5 py-28">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20 space-y-5">
@@ -85,28 +86,28 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="group bg-gradient-to-b from-white/5 to-transparent p-8 rounded-2xl border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-300 hover:-translate-y-2">
                 <div className="text-tecmitalk-accent text-4xl font-bold mb-6">01</div>
-                <h4 className="text-2xl font-semibold text-white mb-4">Expertos globales</h4>
+                <h4 className="text-2xl font-semibold text-white mb-4">Inspiración de Expertos</h4>
                 <p className="text-gray-300/80 leading-relaxed">
-                  Accede a conocimiento de líderes internacionales en IA, blockchain y transformación digital.
+                  Escucha a líderes de la innovación y el emprendimiento compartir sus experiencias, estrategias y consejos para impulsar tu crecimiento personal y profesional.
                 </p>
               </div>
 
               <div className="bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10 hover:border-tecmitalk-accent transition">
                 <div className="text-tecmitalk-accent text-4xl font-bold mb-4">02</div>
-                <h4 className="text-xl font-bold text-white mb-3">Networking valioso</h4>
-                <p className="text-gray-200">Conecta con profesionales, reclutadores y colegas que comparten tus intereses y pasiones.</p>
+                <h4 className="text-xl font-bold text-white mb-3">Networking de Alto Nivel</h4>
+                <p className="text-gray-200">Conéctate con emprendedores, inversionistas y profesionales de diversas industrias. Amplía tu red de contactos y encuentra nuevas oportunidades de colaboración.</p>
               </div>
 
               <div className="bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10 hover:border-tecmitalk-accent transition">
                 <div className="text-tecmitalk-accent text-4xl font-bold mb-4">03</div>
-                <h4 className="text-xl font-bold text-white mb-3">Tendencias actuales</h4>
-                <p className="text-gray-200">Mantente al día con las últimas tecnologías, herramientas y metodologías que están transformando el sector.</p>
+                <h4 className="text-xl font-bold text-white mb-3">Aprendizaje Práctico</h4>
+                <p className="text-gray-200">Talleres, paneles y charlas con contenido valioso que podrás aplicar de inmediato en tus proyectos y en tu desarrollo personal.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Speakers Section - Enhanced */}
+        {/* Speakers Section */}
         <section className="py-24 bg-gradient-to-b from-[#14095D] to-[#0D063A]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20 space-y-4">
@@ -120,7 +121,7 @@ export default function Home() {
                 <div key={speaker.id} className="relative overflow-hidden rounded-2xl group hover:shadow-2xl transition-all duration-500">
                   <div className="aspect-square relative overflow-hidden">
                     <Image
-                      src={speaker.image}
+                      src={`/${speaker.image}`}
                       alt={speaker.name}
                       width={400}
                       height={400}
@@ -150,9 +151,12 @@ export default function Home() {
             </div>
 
             <div className="mt-12 text-center">
-              <Button className="bg-tecmitalk-accent hover:bg-tecmitalk-accent/90 text-white px-8 py-4 text-lg">
+              <Link 
+                href="/tickets"
+                className="inline-block bg-tecmitalk-accent hover:bg-tecmitalk-accent/90 text-white px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300 transform hover:scale-105"
+              >
                 Obtener tickets
-              </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -186,7 +190,16 @@ export default function Home() {
                     </svg>
                     <div>
                       <h4 className="text-white font-medium">Contacto</h4>
-                      <p className="text-gray-300">Para preguntas sobre el evento: <a href="mailto:tecmitalk@tecmilenio.mx" className="text-tecmitalk-accent hover:underline">tecmitalk@tecmilenio.mx</a></p>
+                      <p className="text-gray-300">Para preguntas sobre el evento: 
+                        <a 
+                          href="https://wa.me/5218180861794" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-tecmitalk-accent hover:underline ml-1"
+                        >
+                          Contactar por WhatsApp
+                        </a>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -194,7 +207,7 @@ export default function Home() {
 
               <div className="h-96 bg-gray-800 rounded-lg overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/place/Tecmilenio+San+Nicolás/@25.743988,-100.2853909,17z/data=!3m1!4b1!4m6!3m5!1s0x866294ea743f4987:0x1c359940df5d881f!8m2!3d25.743988!4d-100.282816!16s%2Fg%2F1trvlw4k?entry=ttu&g_ep=EgoyMDI1MDMzMS4wIKXMDSoASAFQAw%3D%3D"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3593.210318477921!2d-100.2853909!3d25.743988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866294ea743f4987%3A0x1c359940df5d881f!2sTecmilenio%20San%20Nicol%C3%A1s!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -208,5 +221,5 @@ export default function Home() {
         </section>
       </div>
     </div>
-  );
+  )
 }

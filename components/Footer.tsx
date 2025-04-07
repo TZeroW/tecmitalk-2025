@@ -14,7 +14,7 @@ export default function Footer() {
                height={48} 
                className="h-12 w-auto mr-4"
              />
-             <p className="text-gray-300 text-sm">El evento tecnológico más importante del año.</p>
+             <p className="text-gray-300 text-sm">El evento más importante del año.</p>
            </div>
            
            <div className="flex space-x-4">
