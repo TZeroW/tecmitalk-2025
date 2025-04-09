@@ -52,13 +52,13 @@ export default function Home() {
                   </svg>
                   29 de Abril del 2025
                 </div>
-                <div className="inline-flex items-center border border-white/30 rounded-full px-4 py-2 text-white text-sm">
+                <div className="inline-flex items-center border border-white/30 rounded-full px-4 py-2 text-white/90 backdrop-blur-sm hover:bg-white/5 transition-colors">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   9:00 a.m. - 6:00 p.m.
                 </div>
-                <div className="inline-flex items-center border border-white/30 rounded-full px-4 py-2 text-white text-sm">
+                <div className="inline-flex items-center border border-white/30 rounded-full px-4 py-2 text-white/90 backdrop-blur-sm hover:bg-white/5 transition-colors">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -67,10 +67,18 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             <div className="w-full lg:max-w-2xl transform hover:scale-[1.02] transition-transform duration-300 ease-out">
-              <EventTicket />
-            </div>
+          <div className="relative w-full" style={{ aspectRatio: '16/7.2' }}> 
+            <Image
+              src="/boleto_priority.svg"
+              alt="boleto_priority"
+              layout="fill"  
+              objectFit="cover"
+              objectPosition="left"   
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
           </div>
         </div>
 
@@ -92,13 +100,13 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10 hover:border-tecmitalk-accent transition">
+              <div className="group bg-gradient-to-b from-white/5 to-transparent p-8 rounded-2xl border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-300 hover:-translate-y-2">
                 <div className="text-tecmitalk-accent text-4xl font-bold mb-4">02</div>
                 <h4 className="text-xl font-bold text-white mb-3">Networking de Alto Nivel</h4>
                 <p className="text-gray-200">Conéctate con emprendedores, inversionistas y profesionales de diversas industrias. Amplía tu red de contactos y encuentra nuevas oportunidades de colaboración.</p>
               </div>
 
-              <div className="bg-white/5 p-8 rounded-lg backdrop-blur-sm border border-white/10 hover:border-tecmitalk-accent transition">
+              <div className="group bg-gradient-to-b from-white/5 to-transparent p-8 rounded-2xl border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-300 hover:-translate-y-2">
                 <div className="text-tecmitalk-accent text-4xl font-bold mb-4">03</div>
                 <h4 className="text-xl font-bold text-white mb-3">Aprendizaje Práctico</h4>
                 <p className="text-gray-200">Talleres, paneles y charlas con contenido valioso que podrás aplicar de inmediato en tus proyectos y en tu desarrollo personal.</p>
