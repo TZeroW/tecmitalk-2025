@@ -110,6 +110,11 @@ export default function ConfirmationPage() {
             </Button>
           </Link>
           
+          <Link href={`/tickets/${orderId}`} className="flex-1">
+            <Button className="w-full py-3 bg-tecmitalk-accent hover:bg-tecmitalk-accent/90">
+              Ver Ticket
+            </Button>
+          </Link>
           <Link href="/" className="flex-1">
             <Button className="w-full py-3 bg-tecmitalk-accent hover:bg-tecmitalk-accent/90">
               Volver al inicio

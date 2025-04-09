@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Gift, Users, PieChart } from 'lucide-react';
 import { toast } from 'sonner';
@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { PieChart as ReChartPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CAREERS, CAMPUSES, BOLETOSTYPE, PAYTYPE } from '@/app/data/constants';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 
 interface Student {
@@ -753,6 +754,23 @@ export default function AdminPage() {
                               onClick={() => handleEdit(student)}
                             >
                               Editar
+                            </Button>
+                            <Link
+                              href={`/tickets/${student.id}`}
+                              className={buttonVariants({variant:'outline'})}
+                              >
+                              Ver
+                            </Link>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const url = `${window.location.origin}/tickets/${student.id}`;
+                                navigator.clipboard.writeText(url);
+                                toast.success('URL copiada al portapapeles');
+                              }}
+                            >
+                              Copiar URL
                             </Button>
                             <Button
                               variant="destructive"
