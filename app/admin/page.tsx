@@ -24,6 +24,8 @@ interface Student {
   typepay: string;
   paid: boolean;
   userType: 'student' | 'alumni';
+  customer_email?: string;
+  customer_name?: string;
 }
 
 
@@ -60,7 +62,7 @@ export default function AdminPage() {
     return (
       (filters.ticketType === '' || student.typeticket === filters.ticketType) &&
       (filters.paymentType === '' || student.typepay === filters.paymentType) &&
-      (filters.paymentStatus === '' || 
+      (filters.paymentStatus === '' ||
         (filters.paymentStatus === 'paid' && student.paid) ||
         (filters.paymentStatus === 'unpaid' && !student.paid))
     );
@@ -82,16 +84,16 @@ export default function AdminPage() {
 
     try {
       const { error } = await supabase
-        .from('RegistroTecmi')
+        .from('orders')
         .delete()
         .eq('id', itemToDelete.id);
 
       if (error) throw error;
 
       toast.success('Asistente eliminado con éxito');
-      
+
       // Refresh data
-      const { data } = await supabase.from('RegistroTecmi').select('*');
+      const { data } = await supabase.from('orders').select('*');
       if (data) {
         setStudents(data as Student[]);
         processChartData(data as Student[]);
@@ -113,16 +115,16 @@ export default function AdminPage() {
     const supabase = createClient();
     try {
       const { error } = await supabase
-        .from('RegistroTecmi')
+        .from('orders')
         .update(updatedData)
         .eq('id', updatedData.id);
 
       if (error) throw error;
 
       toast.success('Asistente actualizado con éxito');
-      
+
       // Refresh data
-      const { data } = await supabase.from('RegistroTecmi').select('*');
+      const { data } = await supabase.from('orders').select('*');
       if (data) {
         setStudents(data as Student[]);
         processChartData(data as Student[]);
@@ -136,7 +138,7 @@ export default function AdminPage() {
 
   const handleRegisterSubmit = async () => {
     const supabase = createClient();
-    
+
     try {
       // Validación de campos obligatorios
       if (!formData.name || !formData.matricula || !formData.typeticket) {
@@ -146,24 +148,24 @@ export default function AdminPage() {
         });
         return;
       }
-  
+
       // Insertar en Supabase
       const { error } = await supabase
-        .from('RegistroTecmi')
+        .from('orders')
         .insert([{
           name: formData.name,
           apellido: formData.apellido,
           matricula: formData.matricula,
-          semester: formData.semester || 1, // Valor por defecto
+          semester: formData.semester || 1,
           career: formData.career,
           campus: formData.campus,
           typeticket: formData.typeticket,
           typepay: formData.typepay,
-          paid: formData.paid || false, // Valor por defecto
+          paid: formData.paid || false,
         }]);
-  
+
       if (error) throw error;
-  
+
       // Notificación de éxito mejorada
       toast.success('¡Registro exitoso!', {
         description: (
@@ -175,7 +177,7 @@ export default function AdminPage() {
         duration: 5000,
         position: 'top-right'
       });
-  
+
       // Reset del formulario (versión optimizada)
       setFormData({
         name: '',
@@ -188,19 +190,19 @@ export default function AdminPage() {
         typepay: '',
         paid: false
       });
-  
+
       // Refrescar datos (versión optimizada)
       const { data, error: fetchError } = await supabase
-        .from('RegistroTecmi')
+        .from('orders')
         .select('*');
-        
+
       if (fetchError) throw fetchError;
-      
+
       if (data) {
         setStudents(data as Student[]);
         processChartData(data as Student[]);
       }
-  
+
     } catch (err) {
       console.error('Error al registrar:', err);
       toast.error('Error en el registro', {
@@ -299,7 +301,7 @@ export default function AdminPage() {
         const supabase = createClient();
 
         const { data, error } = await supabase
-          .from('RegistroTecmi')
+          .from('orders')
           .select('*');
 
         if (error) throw error;
@@ -342,177 +344,177 @@ export default function AdminPage() {
             <p className="text-lg text-gray-300">Gestión de Asistentes</p>
           </div>
           <div className="flex gap-4">
-          <Dialog>
-          <DialogTrigger asChild>
-            <Button className="bg-white text-custom-green hover:bg-gray-100">
-              Registrar Asistente
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Registrar Nuevo Asistente</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-6">
-              {/* Sección 1: Datos Personales */}
-              <div className="border-b pb-4">
-                <h3 className="text-lg font-medium">Datos Personales</h3>
-                <div className="grid gap-4 md:grid-cols-2 mt-4">
-                  <div className="grid gap-2">
-                    <label>Nombre(s)</label>
-                    <input 
-                      className="border p-2 rounded"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Ej. Juan Carlos"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label>Apellidos</label>
-                    <input 
-                      className="border p-2 rounded"
-                      value={formData.apellido}
-                      onChange={(e) => setFormData({...formData, apellido: e.target.value})}
-                      placeholder="Ej. Pérez López"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label>Matrícula</label>
-                    <input 
-                      className="border p-2 rounded"
-                      value={formData.matricula}
-                      onChange={(e) => setFormData({...formData, matricula: e.target.value})}
-                      placeholder="Ej. A01234567"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-  <label>Semestre</label>
-  <input 
-    type="number" 
-    min="1" 
-    max="8"
-    className="border p-2 rounded"
-    value={formData.semester || ''}
-    onChange={(e) => {
-      const value = e.target.value;
-      // Permitir campo vacío temporalmente
-      if (value === '') {
-        setFormData({...formData, semester: 0}); // Set to default value 1 instead of empty string
-      } else {
-        const numValue = parseInt(value);
-        if (!isNaN(numValue)) {
-          // Asegurarse que esté entre 1 y 8
-          const clampedValue = Math.min(8, Math.max(1, numValue));
-          setFormData({...formData, semester: clampedValue});
-        }
-      }
-    }}
-    onBlur={(e) => {
-      // Si queda vacío al salir, poner valor por defecto 1
-      if (e.target.value === '') {
-        setFormData({...formData, semester: 1});
-      }
-    }}
-    placeholder="Ej. 5"
-  />
-</div>
-                  <div className="flex flex-wrap gap-4">
-  <div className="flex-1 min-w-[200px]">
-    <label className="block mb-2 text-sm font-medium text-gray-700">  {/* Estilos añadidos */}
-      Carrera
-    </label>
-    <select 
-      className="border p-2 rounded h-[42px] w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      value={formData.career}
-      onChange={(e) => setFormData({...formData, career: e.target.value})}
-    >
-      <option value="">Selecciona tu carrera</option>
-      {CAREERS.map((career) => (
-        <option key={career.id} value={career.id}>
-          {career.name}
-        </option>
-      ))}
-    </select>
-  </div>
-</div>
-                  <div className="grid gap-2">
-                    <label>Campus</label>
-                    <select 
-                      className="border p-2 rounded h-[42px]"
-                      value={formData.campus}
-                      onChange={(e) => setFormData({...formData, campus: e.target.value})}
-                    >
-                      <option value="">Selecciona tu campus</option>
-                      {CAMPUSES.map((campus) => (
-                        <option key={campus.id} value={campus.id}>
-                          {campus.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Sección 2: Información del Boleto */}
-              <div>
-                <h3 className="text-lg font-medium">Información del Boleto</h3>
-                <div className="grid gap-4 md:grid-cols-2 mt-4">
-                  <div className="grid gap-2">
-                    <label>Tipo de Boleto</label>
-                    <select
-                      className="border p-2 rounded h-[42px]"
-                      value={formData.typeticket}
-                      onChange={(e) => setFormData({...formData, typeticket: e.target.value})}
-                    >
-                      <option value="">Selecciona un tipo</option>
-                      {BOLETOSTYPE.map((type) => (
-                        <option key={type.id} value={type.id}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="grid gap-2">
-                    <label>Tipo de Pago</label>
-                    <select
-                      className="border p-2 rounded h-[42px]"
-                      value={formData.typepay}
-                      onChange={(e) => setFormData({...formData, typepay: e.target.value})}
-                    >
-                      <option value="">Selecciona método</option>
-                      {PAYTYPE.map((type) => (
-                        <option key={type.id} value={type.id}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="grid gap-2">
-                    <label>Estado de Pago</label>
-                    <select
-                      className="border p-2 rounded h-[42px]"
-                      value={formData.paid ? 'true' : 'false'}
-                      onChange={(e) => setFormData({...formData, paid: e.target.value === 'true'})}
-                    >
-                      <option value="true">Pagado</option>
-                      <option value="false">Pendiente</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Botón de envío */}
-              <div className="flex justify-end pt-4">
-                <Button 
-                  onClick={handleRegisterSubmit}
-                  disabled={!formData.name || !formData.matricula || !formData.typeticket}
-                  className="bg-custom-green text-white hover:bg-green-600"
-                >
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-white text-custom-green hover:bg-gray-100">
                   Registrar Asistente
                 </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Registrar Nuevo Asistente</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  {/* Sección 1: Datos Personales */}
+                  <div className="border-b pb-4">
+                    <h3 className="text-lg font-medium">Datos Personales</h3>
+                    <div className="grid gap-4 md:grid-cols-2 mt-4">
+                      <div className="grid gap-2">
+                        <label>Nombre(s)</label>
+                        <input
+                          className="border p-2 rounded"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Ej. Juan Carlos"
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Apellidos</label>
+                        <input
+                          className="border p-2 rounded"
+                          value={formData.apellido}
+                          onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
+                          placeholder="Ej. Pérez López"
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Matrícula</label>
+                        <input
+                          className="border p-2 rounded"
+                          value={formData.matricula}
+                          onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
+                          placeholder="Ej. A01234567"
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Semestre</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="8"
+                          className="border p-2 rounded"
+                          value={formData.semester || ''}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Permitir campo vacío temporalmente
+                            if (value === '') {
+                              setFormData({ ...formData, semester: 0 }); // Set to default value 1 instead of empty string
+                            } else {
+                              const numValue = parseInt(value);
+                              if (!isNaN(numValue)) {
+                                // Asegurarse que esté entre 1 y 8
+                                const clampedValue = Math.min(8, Math.max(1, numValue));
+                                setFormData({ ...formData, semester: clampedValue });
+                              }
+                            }
+                          }}
+                          onBlur={(e) => {
+                            // Si queda vacío al salir, poner valor por defecto 1
+                            if (e.target.value === '') {
+                              setFormData({ ...formData, semester: 1 });
+                            }
+                          }}
+                          placeholder="Ej. 5"
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex-1 min-w-[200px]">
+                          <label className="block mb-2 text-sm font-medium text-gray-700">  {/* Estilos añadidos */}
+                            Carrera
+                          </label>
+                          <select
+                            className="border p-2 rounded h-[42px] w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            value={formData.career}
+                            onChange={(e) => setFormData({ ...formData, career: e.target.value })}
+                          >
+                            <option value="">Selecciona tu carrera</option>
+                            {CAREERS.map((career) => (
+                              <option key={career.id} value={career.id}>
+                                {career.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Campus</label>
+                        <select
+                          className="border p-2 rounded h-[42px]"
+                          value={formData.campus}
+                          onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
+                        >
+                          <option value="">Selecciona tu campus</option>
+                          {CAMPUSES.map((campus) => (
+                            <option key={campus.id} value={campus.id}>
+                              {campus.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sección 2: Información del Boleto */}
+                  <div>
+                    <h3 className="text-lg font-medium">Información del Boleto</h3>
+                    <div className="grid gap-4 md:grid-cols-2 mt-4">
+                      <div className="grid gap-2">
+                        <label>Tipo de Boleto</label>
+                        <select
+                          className="border p-2 rounded h-[42px]"
+                          value={formData.typeticket}
+                          onChange={(e) => setFormData({ ...formData, typeticket: e.target.value })}
+                        >
+                          <option value="">Selecciona un tipo</option>
+                          {BOLETOSTYPE.map((type) => (
+                            <option key={type.id} value={type.id}>
+                              {type.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Tipo de Pago</label>
+                        <select
+                          className="border p-2 rounded h-[42px]"
+                          value={formData.typepay}
+                          onChange={(e) => setFormData({ ...formData, typepay: e.target.value })}
+                        >
+                          <option value="">Selecciona método</option>
+                          {PAYTYPE.map((type) => (
+                            <option key={type.id} value={type.id}>
+                              {type.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="grid gap-2">
+                        <label>Estado de Pago</label>
+                        <select
+                          className="border p-2 rounded h-[42px]"
+                          value={formData.paid ? 'true' : 'false'}
+                          onChange={(e) => setFormData({ ...formData, paid: e.target.value === 'true' })}
+                        >
+                          <option value="true">Pagado</option>
+                          <option value="false">Pendiente</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Botón de envío */}
+                  <div className="flex justify-end pt-4">
+                    <Button
+                      onClick={handleRegisterSubmit}
+                      disabled={!formData.name || !formData.matricula || !formData.typeticket}
+                      className="bg-custom-green text-white hover:bg-green-600"
+                    >
+                      Registrar Asistente
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -654,130 +656,130 @@ export default function AdminPage() {
 
         {/* Asistentes Table */}
         <Card className="bg-white border border-gray-200 shadow-lg">
-  <CardHeader>
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <CardTitle>Lista de Asistentes</CardTitle>
-      <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-        {/* Filtro por Tipo de Boleto */}
-        <select
-          className="border p-2 rounded text-sm"
-          value={filters.ticketType}
-          onChange={(e) => setFilters({...filters, ticketType: e.target.value})}
-        >
-          <option value="">Todos los boletos</option>
-          {BOLETOSTYPE.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
+          <CardHeader>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <CardTitle>Lista de Asistentes</CardTitle>
+              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                {/* Filtro por Tipo de Boleto */}
+                <select
+                  className="border p-2 rounded text-sm"
+                  value={filters.ticketType}
+                  onChange={(e) => setFilters({ ...filters, ticketType: e.target.value })}
+                >
+                  <option value="">Todos los boletos</option>
+                  {BOLETOSTYPE.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
 
-        {/* Filtro por Tipo de Pago */}
-        <select
-          className="border p-2 rounded text-sm"
-          value={filters.paymentType}
-          onChange={(e) => setFilters({...filters, paymentType: e.target.value})}
-        >
-          <option value="">Todos los pagos</option>
-          {PAYTYPE.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
+                {/* Filtro por Tipo de Pago */}
+                <select
+                  className="border p-2 rounded text-sm"
+                  value={filters.paymentType}
+                  onChange={(e) => setFilters({ ...filters, paymentType: e.target.value })}
+                >
+                  <option value="">Todos los pagos</option>
+                  {PAYTYPE.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
 
-        {/* Filtro por Estado de Pago */}
-        <select
-          className="border p-2 rounded text-sm"
-          value={filters.paymentStatus}
-          onChange={(e) => setFilters({...filters, paymentStatus: e.target.value})}
-        >
-          <option value="">Todos los estados</option>
-          <option value="paid">Pagado</option>
-          <option value="unpaid">Pendiente</option>
-        </select>
+                {/* Filtro por Estado de Pago */}
+                <select
+                  className="border p-2 rounded text-sm"
+                  value={filters.paymentStatus}
+                  onChange={(e) => setFilters({ ...filters, paymentStatus: e.target.value })}
+                >
+                  <option value="">Todos los estados</option>
+                  <option value="paid">Pagado</option>
+                  <option value="unpaid">Pendiente</option>
+                </select>
 
-        {/* Botón para limpiar filtros */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setFilters({
-            ticketType: '',
-            paymentType: '',
-            paymentStatus: ''
-          })}
-          className="whitespace-nowrap"
-        >
-          Limpiar filtros
-        </Button>
-      </div>
-    </div>
-  </CardHeader>
-  <CardContent>
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left py-3 px-4">Nombre</th>
-            <th className="text-left py-3 px-4">Matrícula</th>
-            <th className="text-left py-3 px-4">Carrera</th>
-            <th className="text-left py-3 px-4">Campus</th>
-            <th className="text-left py-3 px-4">Tipo de Boleto</th>
-            <th className="text-left py-3 px-4">Tipo de Pago</th>
-            <th className="text-left py-3 px-4">Estado de Pago</th>
-            <th className="text-left py-3 px-4">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.length > 0 ? (
-            filteredStudents.map((student) => (
-              <tr key={student.id} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{student.name} {student.apellido}</td>
-                <td className="py-2 px-4">{student.matricula}</td>
-                <td className="py-2 px-4">{CAREERS.find(c => c.id === student.career)?.name || student.career}</td>
-                <td className="py-2 px-4">{CAMPUSES.find(c => c.id === student.campus)?.name || student.campus}</td>
-                <td className="py-2 px-4">{BOLETOSTYPE.find(t => t.id === student.typeticket)?.name || student.typeticket}</td>
-                <td className="py-2 px-4">{PAYTYPE.find(t => t.id === student.typepay)?.name || student.typepay}</td>
-                <td className="py-2 px-4">
-                  <span className={`px-2 py-1 rounded-full text-xs ${student.paid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                    {student.paid ? 'Pagado' : 'Pendiente'}
-                  </span>
-                </td>
-                <td className="py-2 px-4">
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(student)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => {
-                        setItemToDelete({ id: student.id });
-                        setIsDeleteDialogOpen(true);
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={8} className="py-4 text-center text-gray-500">
-                No se encontraron asistentes con los filtros aplicados
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </CardContent>
-</Card>
+                {/* Botón para limpiar filtros */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setFilters({
+                    ticketType: '',
+                    paymentType: '',
+                    paymentStatus: ''
+                  })}
+                  className="whitespace-nowrap"
+                >
+                  Limpiar filtros
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4">Nombre</th>
+                    <th className="text-left py-3 px-4">Email</th>
+                    <th className="text-left py-3 px-4">Carrera</th>
+                    <th className="text-left py-3 px-4">Campus</th>
+                    <th className="text-left py-3 px-4">Tipo de Boleto</th>
+                    <th className="text-left py-3 px-4">Tipo de Pago</th>
+                    <th className="text-left py-3 px-4">Estado de Pago</th>
+                    <th className="text-left py-3 px-4">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((student) => (
+                      <tr key={student.id} className="border-b hover:bg-gray-50">
+                        <td className="py-2 px-4">{student.customer_name} {student.apellido}</td>
+                        <td className="py-2 px-4">{student.customer_email}</td>
+                        <td className="py-2 px-4">{CAREERS.find(c => c.id === student.career)?.name || student.career}</td>
+                        <td className="py-2 px-4">{CAMPUSES.find(c => c.id === student.campus)?.name || student.campus}</td>
+                        <td className="py-2 px-4">{BOLETOSTYPE.find(t => t.id === student.typeticket)?.name || student.typeticket}</td>
+                        <td className="py-2 px-4">{PAYTYPE.find(t => t.id === student.typepay)?.name || student.typepay}</td>
+                        <td className="py-2 px-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${student.paid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {student.paid ? 'Pagado' : 'Pendiente'}
+                          </span>
+                        </td>
+                        <td className="py-2 px-4">
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(student)}
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                setItemToDelete({ id: student.id });
+                                setIsDeleteDialogOpen(true);
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="py-4 text-center text-gray-500">
+                        No se encontraron asistentes con los filtros aplicados
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Delete Confirmation Dialog */}
@@ -860,7 +862,7 @@ export default function AdminPage() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Sección 2: Información del Boleto */}
               <div>
                 <h3 className="text-lg font-medium">Información del Boleto</h3>
@@ -915,7 +917,7 @@ export default function AdminPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex justify-end gap-3 pt-4">
                 <Button variant="outline" onClick={() => setSelectedStudentToEdit(null)}>
                   Cancelar

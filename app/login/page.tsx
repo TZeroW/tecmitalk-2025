@@ -61,11 +61,13 @@ export default function LoginPage() {
                                 type="email"
                                 placeholder="Correo electrónico"
                                 className="w-full h-12 px-4 bg-white/5 border-white/20 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-tecmitalk-accent focus:border-transparent transition-all"
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <Input
                                 type="password"
                                 placeholder="Contraseña"
                                 className="w-full h-12 px-4 bg-white/5 border-white/20 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-tecmitalk-accent focus:border-transparent transition-all"
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
 
