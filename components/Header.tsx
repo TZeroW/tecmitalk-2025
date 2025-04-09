@@ -1,8 +1,9 @@
 'use client'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { Button } from './ui/button'
+import { Button, buttonVariants } from './ui/button'
 import AdminButton from './AdminButton'
+import Link from 'next/link'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -10,7 +11,7 @@ export default function Header() {
     return (
         <nav className="bg-[#14095D]/80 backdrop-blur-lg py-5 px-6 sticky top-0 z-50 border-b border-white/10">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
-                <div className="flex items-center space-x-3">
+                <Link href="/" className="flex items-center space-x-3">
                     <Image
                         src="logo_sin_fondo.png"
                         alt="TECMITALK"
@@ -31,7 +32,7 @@ export default function Header() {
                             )}
                         </svg>
                     </button>
-                </div>
+                </Link>
 
                 {/* Menú móvil */}
                 <div className={`md:hidden fixed inset-0 bg-[#14095D] backdrop-blur-lg transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} z-[60]`}>
@@ -69,9 +70,13 @@ export default function Header() {
                 </div>
                 {/* Botones desktop */}
                 <div className='hidden md:flex gap-4 items-center'>
-                    <Button variant="outline" className="border-white/30 hover:bg-white/10 hover:border-white/50 px-6 h-11 text-[15px] font-semibold tracking-wide">
-                        Registro
-                    </Button>
+                    <Link
+                        href="/tickets"
+
+                        className={`bg-white max-sm:w-full text-custom-green hover:bg-black-100 h-11 py-4 ${buttonVariants({variant:'outline'})}`}
+                    >
+                        Comprar Tickets
+                    </Link>
                     <AdminButton />
                 </div>
             </div>

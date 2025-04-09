@@ -37,34 +37,16 @@ export default function LoginPage() {
 
     return (
         <div className="h-screen flex flex-col md:flex-row items-center justify-center p-4 bg-gradient-to-br from-[#14095D] to-[#0D063A]">
-            <div className="lg:w-1/2 hidden lg:flex flex-col items-center justify-center p-8 space-y-6">
-                <div className="relative w-full max-w-xl group">
-                    <Image
-                        src="/feria.jpg"
-                        alt="Feria de Empleo"
-                        width={600}
-                        height={600}
-                        className="rounded-2xl shadow-2xl object-cover transform transition-transform duration-500 group-hover:scale-105"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-2xl" />
-                </div>
-                <h1 className="text-4xl font-bold text-white text-center leading-snug">
-                    <span className="bg-gradient-to-r from-tecmitalk-accent to-emerald-400 bg-clip-text text-transparent">Feria de Empleo</span><br/>
-                    TECMI 2024
-                </h1>
-            </div>
-
             <div className="lg:w-1/2 w-full max-w-md p-6">
                 <div className="backdrop-blur-lg bg-white/5 rounded-2xl shadow-xl border border-white/10 p-8 space-y-8">
                     <div className="space-y-4">
                         <div className="flex justify-center transition-opacity duration-300 hover:opacity-90">
                             <Image
-                                src="/logo.png"
+                                src="logo_sin_fondo.png"
                                 alt="Logo TECMI"
                                 width={160}
                                 height={160}
-                                className="w-32 h-32"
+                                className="w-full"
                             />
                         </div>
                         <div className="text-center space-y-2">
