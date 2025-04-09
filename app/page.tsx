@@ -67,10 +67,18 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             <div className="w-full lg:max-w-2xl transform hover:scale-[1.02] transition-transform duration-300 ease-out">
-              <EventTicket />
-            </div>
+          <div className="relative w-full" style={{ aspectRatio: '16/7.2' }}> 
+            <Image
+              src="/boleto_priority.svg"
+              alt="boleto_priority"
+              layout="fill"  
+              objectFit="cover"
+              objectPosition="left"   
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
           </div>
         </div>
 
