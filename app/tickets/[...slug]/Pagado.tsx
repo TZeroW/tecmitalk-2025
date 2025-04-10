@@ -133,12 +133,12 @@ export default function Pagado({ order, orderItems }: { order: Order, orderItems
                   <div className="space-y-2">
                     <p>Para completar tu compra, realiza una transferencia con los siguientes datos:</p>
                     <div className="bg-blue-900/30 p-4 rounded-lg">
-                      <p><span className="font-medium">Banco:</span> BBVA</p>
-                      <p><span className="font-medium">Titular:</span> TECMITALK A.C.</p>
+                      <p><span className="font-medium">Banco:</span> Santander</p>
+                      <p><span className="font-medium">Titular:</span> Alexandra Centurión.</p>
                       <div className="flex items-center gap-2">
-                        <p><span className="font-medium">CLABE:</span> 012580015678901234</p>
+                        <p><span className="font-medium">Tarjeta:</span> 5579083041559523</p>
                         <button
-                          onClick={() => navigator.clipboard.writeText('012580015678901234')}
+                          onClick={() => navigator.clipboard.writeText('5579083041559523')}
                           className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
                         >
                           Copiar
