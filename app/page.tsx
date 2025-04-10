@@ -23,6 +23,11 @@ export default function Home() {
       id: 3,
       name: "Ana Delia García",
       image: "3.svg"
+    },
+    {
+      id: 4,
+      name: "Melany Garza",
+      image: "melanie.jpg"
     }
   ]
 
