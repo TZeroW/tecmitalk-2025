@@ -94,7 +94,7 @@ export default function TicketClientPage() {
           <h1 className="text-2xl font-bold text-white mb-4">Error</h1>
           <p className="text-gray-300 mb-6">{error}</p>
           <Link href="/tickets">
-            <Button className="w-full py-3 bg-tecmitalk-accent hover:bg-tecmitalk-accent/90">
+            <Button className="w-full py-3 bg-tecmitalk-accent hover:bg-tecmitalk-accent/90 ">
               Volver a la página de tickets
             </Button>
           </Link>
