@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
 import { PieChart as ReChartPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CAREERS, CAMPUSES, BOLETOSTYPE, PAYTYPE } from '@/app/data/constants';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 
 
@@ -708,7 +708,7 @@ export default function AdminPage() {
 
       {/* Edit Student Dialog */}
       <Dialog open={selectedStudentToEdit !== null} onOpenChange={() => setSelectedStudentToEdit(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Editar Asistente</DialogTitle>
           </DialogHeader>
@@ -832,6 +832,9 @@ export default function AdminPage() {
             </div>
           )}
         </DialogContent>
+        <DialogFooter>
+          
+        </DialogFooter>
       </Dialog>
     </div>
   );
