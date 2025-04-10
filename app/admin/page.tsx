@@ -55,7 +55,8 @@ export default function AdminPage() {
   const [filters, setFilters] = useState({
     ticketType: '',
     paymentType: '',
-    paymentStatus: ''
+    paymentStatus: '',
+    searchId: ''
   });
 
   // Mover la función de filtrado dentro del componente
@@ -65,7 +66,8 @@ export default function AdminPage() {
       (filters.paymentType === '' || student.typepay === filters.paymentType) &&
       (filters.paymentStatus === '' ||
         (filters.paymentStatus === 'paid' && student.paid) ||
-        (filters.paymentStatus === 'unpaid' && !student.paid))
+        (filters.paymentStatus === 'unpaid' && !student.paid)) &&
+      (filters.searchId === '' || student.id.toLowerCase().includes(filters.searchId.toLowerCase()))
     );
   });
   const [careerData, setCareerData] = useState<Array<{ name: string; value: number }>>([]);
@@ -462,7 +464,7 @@ export default function AdminPage() {
                   </ReChartPie>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full flex items-center justify-center">
+                <div className="h-full flex items-center justify-center text-white">
                   {isLoading ? 'Cargando datos...' : 'No hay datos disponibles'}
                 </div>
               )}
@@ -538,6 +540,15 @@ export default function AdminPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <CardTitle>Lista de Asistentes</CardTitle>
               <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                {/* Filtro de búsqueda por ID */}
+                <input
+                  type="text"
+                  placeholder="Buscar por ID o matrícula"
+                  className="border p-2 rounded text-sm"
+                  value={filters.searchId}
+                  onChange={(e) => setFilters({ ...filters, searchId: e.target.value })}
+                />
+                
                 {/* Filtro por Tipo de Boleto */}
                 <select
                   className="border p-2 rounded text-sm"
@@ -584,7 +595,8 @@ export default function AdminPage() {
                   onClick={() => setFilters({
                     ticketType: '',
                     paymentType: '',
-                    paymentStatus: ''
+                    paymentStatus: '',
+                    searchId: ''
                   })}
                   className="whitespace-nowrap"
                 >

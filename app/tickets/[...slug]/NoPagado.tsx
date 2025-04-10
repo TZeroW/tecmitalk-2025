@@ -6,7 +6,7 @@ import QRCode from 'react-qr-code'
 
 export default function NoPagado({order, orderItems} : {order: Order, orderItems: OrderItem[]}) {
   return (
-    <div className="min-h-screen bg-[#14095D] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#14095D] py-12 px-4 sm:px-6 lg:px-8 text-white">
     <div className="max-w-2xl mx-auto bg-white/5 rounded-xl border border-tecmitalk-accent/30 p-6 md:p-8">
       <Link href="/" className="inline-flex items-center text-tecmitalk-accent hover:text-tecmitalk-accent/80 mb-6">
         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -16,7 +16,7 @@ export default function NoPagado({order, orderItems} : {order: Order, orderItems
       </Link>
     
       <h1 className="text-3xl font-bold text-white mb-8 text-center">Detalles de tu Orden</h1>
-      <div className='py-20 text-center w-full'>
+      <div className='py-20 text-center w-full '>
         Estamos generando tu boleto
       </div>
       {order && (
@@ -26,7 +26,7 @@ export default function NoPagado({order, orderItems} : {order: Order, orderItems
           <div className="flex flex-col items-center mb-8">
             <p className="text-white mb-2">Escanea este código QR para ver tu ticket:</p>
             <div className="bg-white p-4 rounded-lg">
-              <QRCode value={`https://tecmitalk.vercel.app/tickets/${order.id}`} size={128} />
+              <QRCode value={`https://tecmitalk.bysmax.com/tickets/${order.id}`} size={128} />
             </div>
           </div>
            
