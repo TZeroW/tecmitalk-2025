@@ -1,6 +1,8 @@
 import { Order, OrderItem } from '@/app/types'
 import Link from 'next/link'
 import React from 'react'
+import { useRouter } from 'next/router'
+import QRCode from 'react-qr-code'
 
 export default function NoPagado({order, orderItems} : {order: Order, orderItems: OrderItem[]}) {
   return (
@@ -18,7 +20,16 @@ export default function NoPagado({order, orderItems} : {order: Order, orderItems
         Estamos generando tu boleto
       </div>
       {order && (
+        
         <div className="space-y-8">
+          {/* Código QR */}
+          <div className="flex flex-col items-center mb-8">
+            <p className="text-white mb-2">Escanea este código QR para ver tu ticket:</p>
+            <div className="bg-white p-4 rounded-lg">
+              <QRCode value={`https://tecmitalk.vercel.app/tickets/${order.id}`} size={128} />
+            </div>
+          </div>
+           
           {/* Información de la orden */}
           <div className="bg-blue-900/10 border border-blue-400/20 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Información de la Orden</h2>
