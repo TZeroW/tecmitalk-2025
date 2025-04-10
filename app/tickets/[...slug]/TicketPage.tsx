@@ -87,7 +87,7 @@ export default function TicketClientPage() {
     )
   }
 
-  if (error) {
+  if (error || !order) {
     return (
       <div className="min-h-screen bg-[#14095D] flex items-center justify-center p-4">
         <div className="bg-white/5 border border-red-500/30 rounded-xl p-8 max-w-md w-full text-center">

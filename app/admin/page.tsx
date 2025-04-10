@@ -48,7 +48,7 @@ export default function AdminPage() {
     campus: '',
     typeticket: '',
     typepay: '',
-    paid: false
+    paid: true
   });
 
   // Mover los estados de filtro dentro del componente
@@ -68,11 +68,6 @@ export default function AdminPage() {
         (filters.paymentStatus === 'unpaid' && !student.paid))
     );
   });
-
-  // Resto del código del componente...
-
-  // Data for charts
-  const [campusData, setCampusData] = useState<Array<{ name: string; value: number }>>([]);
   const [careerData, setCareerData] = useState<Array<{ name: string; value: number }>>([]);
   const [userTypeData, setUserTypeData] = useState<Array<{ name: string; value: number }>>([]);
   const [paymentData, setPaymentData] = useState<Array<{ name: string; value: number }>>([]);
@@ -84,12 +79,19 @@ export default function AdminPage() {
     const supabase = createClient();
 
     try {
-      const { error } = await supabase
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .delete()
+        .eq('order_id', itemToDelete.id);
+
+      if (itemsError) throw itemsError;
+
+      const { error: orderError } = await supabase
         .from('orders')
         .delete()
         .eq('id', itemToDelete.id);
 
-      if (error) throw error;
+      if (orderError) throw orderError;
 
       toast.success('Asistente eliminado con éxito');
 
@@ -229,12 +231,6 @@ export default function AdminPage() {
       campusCounts[campusName] = (campusCounts[campusName] || 0) + 1;
     });
 
-    const campusChartData = Object.entries(campusCounts)
-      .filter(([_, count]) => count > 0)
-      .map(([name, value]) => ({ name, value }));
-    setCampusData(campusChartData);
-
-    // Process career data
     const careerCounts: Record<string, number> = {};
     data.forEach(student => {
       const careerName = CAREERS.find(c => c.id === student.career)?.name || student.career;
@@ -368,89 +364,6 @@ export default function AdminPage() {
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           placeholder="Ej. Juan Carlos"
                         />
-                      </div>
-                      <div className="grid gap-2">
-                        <label>Apellidos</label>
-                        <input
-                          className="border p-2 rounded"
-                          value={formData.apellido}
-                          onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}
-                          placeholder="Ej. Pérez López"
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <label>Matrícula</label>
-                        <input
-                          className="border p-2 rounded"
-                          value={formData.matricula}
-                          onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
-                          placeholder="Ej. A01234567"
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <label>Semestre</label>
-                        <input
-                          type="number"
-                          min="1"
-                          max="8"
-                          className="border p-2 rounded"
-                          value={formData.semester || ''}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            // Permitir campo vacío temporalmente
-                            if (value === '') {
-                              setFormData({ ...formData, semester: 0 }); // Set to default value 1 instead of empty string
-                            } else {
-                              const numValue = parseInt(value);
-                              if (!isNaN(numValue)) {
-                                // Asegurarse que esté entre 1 y 8
-                                const clampedValue = Math.min(8, Math.max(1, numValue));
-                                setFormData({ ...formData, semester: clampedValue });
-                              }
-                            }
-                          }}
-                          onBlur={(e) => {
-                            // Si queda vacío al salir, poner valor por defecto 1
-                            if (e.target.value === '') {
-                              setFormData({ ...formData, semester: 1 });
-                            }
-                          }}
-                          placeholder="Ej. 5"
-                        />
-                      </div>
-                      <div className="flex flex-wrap gap-4">
-                        <div className="flex-1 min-w-[200px]">
-                          <label className="block mb-2 text-sm font-medium text-gray-700">  {/* Estilos añadidos */}
-                            Carrera
-                          </label>
-                          <select
-                            className="border p-2 rounded h-[42px] w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            value={formData.career}
-                            onChange={(e) => setFormData({ ...formData, career: e.target.value })}
-                          >
-                            <option value="">Selecciona tu carrera</option>
-                            {CAREERS.map((career) => (
-                              <option key={career.id} value={career.id}>
-                                {career.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="grid gap-2">
-                        <label>Campus</label>
-                        <select
-                          className="border p-2 rounded h-[42px]"
-                          value={formData.campus}
-                          onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
-                        >
-                          <option value="">Selecciona tu campus</option>
-                          {CAMPUSES.map((campus) => (
-                            <option key={campus.id} value={campus.id}>
-                              {campus.name}
-                            </option>
-                          ))}
-                        </select>
                       </div>
                     </div>
                   </div>
@@ -591,42 +504,6 @@ export default function AdminPage() {
               )}
             </CardContent>
           </Card>
-
-          {/* Campus Distribution Chart */}
-          <Card className="bg-white border border-gray-200 shadow-lg">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Distribución por Campus</CardTitle>
-              <PieChart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="h-64">
-              {!isLoading && campusData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <ReChartPie>
-                    <Pie
-                      data={campusData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {campusData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </ReChartPie>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full flex items-center justify-center">
-                  {isLoading ? 'Cargando datos...' : 'No hay datos disponibles'}
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         <div className="grid gap-6 mb-8 md:grid-cols-2">
@@ -737,10 +614,6 @@ export default function AdminPage() {
                       <tr key={student.id} className="border-b hover:bg-gray-50">
                         <td className="py-2 px-4">{student.customer_name} {student.apellido}</td>
                         <td className="py-2 px-4">{student.customer_email}</td>
-                        <td className="py-2 px-4">{CAREERS.find(c => c.id === student.career)?.name || student.career}</td>
-                        <td className="py-2 px-4">{CAMPUSES.find(c => c.id === student.campus)?.name || student.campus}</td>
-                        <td className="py-2 px-4">{BOLETOSTYPE.find(t => t.id === student.typeticket)?.name || student.typeticket}</td>
-                        <td className="py-2 px-4">{PAYTYPE.find(t => t.id === student.typepay)?.name || student.typepay}</td>
                         <td className="py-2 px-4">
                           <span className={`px-2 py-1 rounded-full text-xs ${student.paid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                             {student.paid ? 'Pagado' : 'Pendiente'}
@@ -757,8 +630,8 @@ export default function AdminPage() {
                             </Button>
                             <Link
                               href={`/tickets/${student.id}`}
-                              className={buttonVariants({variant:'outline'})}
-                              >
+                              className={buttonVariants({ variant: 'outline' })}
+                            >
                               Ver
                             </Link>
                             <Button
