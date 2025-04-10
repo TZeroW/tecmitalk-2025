@@ -12,7 +12,7 @@ export default function Footer() {
                alt="TECMITALK" 
                width={160} 
                height={48} 
-               className="h-12 w-auto mr-4"
+               className="h-6 w-auto mr-4"
              />
              <p className="text-gray-300 text-sm">El evento más importante del año.</p>
            </div>

@@ -17,7 +17,7 @@ export default function Header() {
                         alt="TECMITALK"
                         width={140}
                         height={48}
-                        className="h-12 w-auto transition-transform duration-300 hover:scale-105"
+                        className="h-6 w-auto transition-transform duration-300 hover:scale-105"
                     />
                 </Link>
                 <button
