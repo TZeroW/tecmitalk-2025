@@ -19,20 +19,20 @@ export default function Header() {
                         height={48}
                         className="h-12 w-auto transition-transform duration-300 hover:scale-105"
                     />
-                    <button
-                        className="lg:hidden text-white p-2"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        aria-label="Abrir menú"
-                    >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            {isMenuOpen ? (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            )}
-                        </svg>
-                    </button>
                 </Link>
+                <button
+                    className="lg:hidden text-white p-2"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    aria-label="Abrir menú"
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {isMenuOpen ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        )}
+                    </svg>
+                </button>
 
                 {/* Menú móvil */}
                 <div className={`md:hidden fixed inset-0 bg-[#14095D] backdrop-blur-lg transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} z-[60]`}>
@@ -52,10 +52,13 @@ export default function Header() {
                                 <a href="#tickets" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Tickets</a>
                                 <a href="#location" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ubicación</a>
                             </div>
-                            <div className="pt-12 space-y-6">
-                                <Button variant="outline" className="w-full bg-white/10 border-white/30 hover:bg-white/20 text-white h-14 text-lg">
-                                    Registro
-                                </Button>
+                            <div className="pt-12 space-y-6 w-full flex flex-col">
+                                <Link
+                                    href="/tickets"
+                                    className={`group bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-700 hover:-translate-y-2 max-sm:w-full text-custom-green h-11 ${buttonVariants({ variant: 'outline' })}`}
+                                >
+                                    Comprar Tickets
+                                </Link>
                                 <AdminButton />
                             </div>
                         </div>
@@ -73,7 +76,7 @@ export default function Header() {
                     <Link
                         href="/tickets"
 
-                        className={`group bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-700 hover:-translate-y-2 max-sm:w-full text-custom-green h-11 ${buttonVariants({variant:'outline'})}`}
+                        className={`group bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-tecmitalk-accent/30 transition-all duration-700 hover:-translate-y-2 max-sm:w-full text-custom-green h-11 ${buttonVariants({ variant: 'outline' })}`}
                     >
                         Comprar Tickets
                     </Link>
