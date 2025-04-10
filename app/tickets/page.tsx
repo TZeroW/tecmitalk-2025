@@ -13,7 +13,14 @@ type TicketType = {
   benefits: string[];
   type: 'general' | 'vip' | 'priority';
   quantity_available: number;
-  is_active: boolean;
+};
+
+type WorkshopType = {
+  id: number;
+  name: string;
+  description: string | null;
+  capacity: number;
+  current_attendees: number;
 };
 
 type PaymentMethod = 'efectivo' | 'transferencia';
@@ -29,40 +36,69 @@ export default function TicketsPage() {
     ticketType: '',
     quantity: 1,
     paymentMethod: '' as PaymentMethod,
+    selectedWorkshop: '',
   });
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [availableTickets, setAvailableTickets] = useState<TicketType[]>([]);
+  const [workshops, setWorkshops] = useState<WorkshopType[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(true);
+  const [loadingWorkshops, setLoadingWorkshops] = useState(true);
 
-  // Cargar tickets activos desde Supabase
+  // Cargar tickets y talleres activos desde Supabase
   useEffect(() => {
-    const fetchTickets = async () => {
+    const fetchData = async () => {
       const supabase = createClient();
       try {
-        const { data, error } = await supabase
+        // 1. Cargar tickets primero
+        const { data: ticketsData, error: ticketsError } = await supabase
           .from('tickets')
           .select('*')
           .eq('is_active', true)
           .order('price', { ascending: true });
-
-        if (error) throw error;
-
-        if (data) {
-          setAvailableTickets(data.map(ticket => ({
-            ...ticket,
-            benefits: ticket.benefits || []
-          })));
+  
+        if (ticketsError || !ticketsData) {
+          console.error("Error tickets:", ticketsError);
+          throw new Error("No se pudieron cargar los tickets. Intenta recargar la página.");
         }
+  
+        // Si no hay tickets activos
+        if (ticketsData.length === 0) {
+          setAvailableTickets([]);
+          throw new Error("Actualmente no hay tickets disponibles.");
+        }
+  
+        setAvailableTickets(ticketsData.map(t => ({ ...t, benefits: t.benefits || [] })));
+  
+        // 2. Solo cargar talleres si hay tickets VIP/Priority
+        const needsWorkshops = ticketsData.some(t => t.type === 'vip' || t.type === 'priority');
+        
+        if (needsWorkshops) {
+          const { data: workshopsData, error: workshopsError } = await supabase
+          .from('workshops')
+          .select('*')
+          .gt('capacity', 0)  // Solo talleres con capacidad disponible
+          .order('name');
+  
+          if (workshopsError) {
+            console.error("Error talleres:", workshopsError);
+            // No lanzar error, solo mostrar advertencia
+            setError(prev => prev + " (Advertencia: Talleres no disponibles)");
+          } else {
+            setWorkshops(workshopsData || []);
+          }
+        }
+  
       } catch (err) {
-        console.error('Error al cargar tickets:', err);
-        setError('No se pudieron cargar los tickets disponibles');
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+        console.error("Error carga datos:", err);
       } finally {
         setLoadingTickets(false);
+        setLoadingWorkshops(false);
       }
     };
-
-    fetchTickets();
+  
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -76,30 +112,31 @@ export default function TicketsPage() {
     if (!formData.paymentMethod) errors.paymentMethod = 'Selecciona método de pago';
     if (formData.quantity < 1 || formData.quantity > 10) errors.quantity = '1-10 boletos';
     
+    // Validación de taller para boletos VIP y Priority
+    if (selectedTicket && (selectedTicket.type === 'vip' || selectedTicket.type === 'priority') && !formData.selectedWorkshop) {
+      errors.selectedWorkshop = 'Selecciona un taller';
+    }
+    
     setFormErrors(errors);
-  }, [formData]);
+  }, [formData, selectedTicket]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement | HTMLSelectElement;
     
-    setFormData(prev => {
-      let newValue: string | number = value;
-      
-      if (name === 'quantity') {
-        newValue = parseInt(value) || 0;
-      } else if (type === 'radio') {
-        newValue = value as PaymentMethod;
-      }
-      
-      return {
-        ...prev,
-        [name]: newValue,
-      };
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? parseInt(value) || 0 : 
+              type === 'radio' ? value as PaymentMethod : 
+              value
+    }));
 
     if (name === 'ticketType') {
       const ticket = availableTickets.find(t => t.id.toString() === value) || null;
       setSelectedTicket(ticket);
+      // Resetear taller seleccionado al cambiar tipo de boleto
+      if (ticket?.type !== 'vip' && ticket?.type !== 'priority') {
+        setFormData(prev => ({ ...prev, selectedWorkshop: '' }));
+      }
     }
   };
 
@@ -152,7 +189,7 @@ export default function TicketsPage() {
 
       if (orderError) throw orderError;
 
-      // 2. Insertar items de la orden (sin subtotal ya que es generado)
+      // 2. Insertar items de la orden
       const { error: itemError } = await supabase
         .from('order_items')
         .insert({
@@ -168,7 +205,37 @@ export default function TicketsPage() {
         throw itemError;
       }
 
-      // 3. Actualizar cantidad disponible de tickets
+      // 3. Insertar taller si es VIP o Priority
+      if ((selectedTicket.type === 'vip' || selectedTicket.type === 'priority') && formData.selectedWorkshop) {
+        const { error: workshopError } = await supabase
+          .from('order_workshops')
+          .insert({
+            order_id: order.id,
+            workshop_id: parseInt(formData.selectedWorkshop),
+            quantity: formData.quantity
+          });
+
+        if (workshopError) {
+          await supabase.from('orders').delete().eq('id', order.id);
+          throw workshopError;
+        }
+
+        // Actualizar contador de asistentes al taller
+        const { data, error } = await supabase.rpc('increment_workshop_attendees', {
+          workshop_id: parseInt(formData.selectedWorkshop),
+          increment_value: formData.quantity
+        });
+        console.log(formData.selectedWorkshop, formData.quantity);
+
+        if (error) {
+          console.error('Error al actualizar asistentes:', error.message);
+          alert('Ocurrió un error al actualizar asistentes.');
+        } else {
+          console.log('Datos actualizados:', data);
+        }
+      }
+
+      // 4. Actualizar cantidad disponible de tickets
       const { error: updateError } = await supabase
         .from('tickets')
         .update({ quantity_available: selectedTicket.quantity_available - formData.quantity })
@@ -179,7 +246,7 @@ export default function TicketsPage() {
         throw updateError;
       }
 
-      // 4. Redirigir a confirmación con todos los parámetros necesarios
+      // 5. Redirigir a confirmación
       router.push(
         `/confirmacion?order_id=${order.id}` +
         `&amount=${totalAmount.toFixed(2)}` +
@@ -189,11 +256,7 @@ export default function TicketsPage() {
       );
       
     } catch (err: any) {
-      console.error('Error completo al procesar la orden:', {
-        message: err.message,
-        code: err.code,
-        details: err.details
-      });
+      console.error('Error al procesar la orden:', err);
       setError(err.message || 'Ocurrió un error al procesar tu compra. Por favor intenta nuevamente.');
     } finally {
       setLoading(false);
@@ -220,14 +283,14 @@ export default function TicketsPage() {
           </div>
         )}
 
-        {loadingTickets ? (
+        {loadingTickets || loadingWorkshops ? (
           <div className="text-center py-12">
             <div className="inline-flex items-center">
               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Cargando tickets disponibles...
+              Cargando datos...
             </div>
           </div>
         ) : availableTickets.length === 0 ? (
@@ -356,6 +419,31 @@ export default function TicketsPage() {
                   {formErrors.paymentMethod && <p className="text-red-400 text-sm mt-1">{formErrors.paymentMethod}</p>}
                 </div>
               </div>
+
+              {/* Selector de taller para boletos VIP y Priority */}
+              {selectedTicket && (selectedTicket.type === 'vip' || selectedTicket.type === 'priority') && (
+                <div>
+                  <label htmlFor="selectedWorkshop" className="block text-sm font-medium text-gray-300 mb-2">
+                    Selecciona tu taller *
+                  </label>
+                  <select
+                    id="selectedWorkshop"
+                    name="selectedWorkshop"
+                    value={formData.selectedWorkshop}
+                    onChange={handleInputChange}
+                    className={`w-full p-3 bg-blue-900/20 border ${formErrors.selectedWorkshop ? 'border-red-500' : 'border-blue-400/30'} rounded-lg text-white focus:ring-2 focus:ring-tecmitalk-accent focus:border-transparent`}
+                    required
+                  >
+                    <option value="">Selecciona un taller</option>
+                    {workshops.map(workshop => (
+                      <option key={workshop.id} value={workshop.id} className="bg-[#14095D]">
+                        {workshop.name} (Capacidad: {workshop.capacity - workshop.current_attendees} disponibles)
+                      </option>
+                    ))}
+                  </select>
+                  {formErrors.selectedWorkshop && <p className="text-red-400 text-sm mt-1">{formErrors.selectedWorkshop}</p>}
+                </div>
+              )}
             </div>
 
             {selectedTicket && (
@@ -375,6 +463,15 @@ export default function TicketsPage() {
                       <li key={index}>{benefit}</li>
                     ))}
                   </ul>
+                  
+                  {formData.selectedWorkshop && (
+                    <p className="pt-2">
+                      Taller seleccionado: <span className="font-medium">
+                        {workshops.find(w => w.id.toString() === formData.selectedWorkshop)?.name}
+                      </span>
+                    </p>
+                  )}
+                  
                   {formData.paymentMethod && (
                     <p className="pt-2">
                       Método de pago: <span className="font-medium capitalize">{formData.paymentMethod}</span>
