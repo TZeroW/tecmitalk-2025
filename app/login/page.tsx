@@ -41,13 +41,13 @@ export default function LoginPage() {
                 <div className="backdrop-blur-lg bg-white/5 rounded-2xl shadow-xl border border-white/10 p-8 space-y-8">
                     <div className="space-y-4">
                         <div className="flex justify-center transition-opacity duration-300 hover:opacity-90">
-                            <Image
-                                src="logo_sin_fondo.png"
-                                alt="Logo TECMI"
-                                width={160}
-                                height={160}
-                                className="w-full"
-                            />
+                        <Image
+                          src="logo_sin_fondo.png" 
+                          alt="TECMITALK" 
+                          width={160} 
+                          height={48} 
+                           className="h-12 w-auto mr-4"
+                        />
                         </div>
                         <div className="text-center space-y-2">
                             <h2 className="text-2xl font-bold text-white">Bienvenido</h2>
