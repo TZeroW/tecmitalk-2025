@@ -8,7 +8,7 @@ export default function Footer() {
          <div className="flex flex-col md:flex-row justify-between items-center">
            <div className="flex flex-col lg:flex-row items-center mb-6 md:mb-0">
              <Image
-               src="logo_sin_fondo.png" 
+               src="/logo_sin_fondo.png" 
                alt="TECMITALK" 
                width={160} 
                height={48} 

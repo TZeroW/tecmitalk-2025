@@ -1,14 +1,32 @@
-import { Order, OrderItem } from '@/app/types'
+import { type Order, type OrderItem } from '@/app/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import QRCode from 'react-qr-code'
 
+function Boleto({ orderItems }: { orderItems: OrderItem }) {
+  const ticketImages = {
+    'Boleto VIP': '/vip.svg',
+    'Boleto Priority': '/boleto_priority.svg',
+    'Boleto General': '/general.svg'
+  } as const;
+
+  const url_boleto = ticketImages[orderItems?.tickets?.name as keyof typeof ticketImages] || '/boleto_priority.svg';
+
+  return (
+    <Image
+      src={url_boleto}
+      alt={orderItems?.tickets?.name || 'Boleto Priority'}
+      className="w-full object-cover"
+      width={500}
+      height={500}
+    />
+  )
+}
+
 export default function Pagado({ order, orderItems }: { order: Order, orderItems: OrderItem[] }) {
   return (
     <div className="min-h-screen bg-[#14095D] py-12 px-4 sm:px-6 lg:px-8">
-
-
       <div className="max-w-2xl mx-auto bg-white/5 rounded-xl border border-tecmitalk-accent/30 p-6 md:p-8">
         <Link href="/" className="inline-flex items-center text-tecmitalk-accent hover:text-tecmitalk-accent/80 mb-6">
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,13 +44,7 @@ export default function Pagado({ order, orderItems }: { order: Order, orderItems
           ) :
             (
               <div>
-                <Image
-                  src="/boleto_priority.svg"
-                  alt="boleto_priority"
-                  className="w-full object-cover"
-                  width={500}
-                  height={500}
-                />
+                <Boleto orderItems={orderItems[0]} />
               </div>
             )
         }
@@ -47,6 +59,75 @@ export default function Pagado({ order, orderItems }: { order: Order, orderItems
                 <QRCode value={`https://tecmitalk.bysmax.com/tickets/${order.id}`} size={128} />
               </div>
             </div>
+
+            {!order.paid && (
+              <>
+
+                {/* Instrucciones de pago */}
+                <div className="bg-blue-900/10 border border-blue-400/20 rounded-lg p-6">
+                  <h2 className="text-xl font-semibold text-white mb-4">Instrucciones de Pago</h2>
+
+                  <div className="space-y-4 text-gray-300">
+                    {order.payment_method === 'transferencia' && (
+                      <div className="space-y-2">
+                        <p>Para completar tu compra, realiza una transferencia con los siguientes datos:</p>
+                        <div className="bg-blue-900/30 p-4 rounded-lg">
+                          <p><span className="font-medium">Banco:</span> Santander</p>
+                          <p><span className="font-medium">Titular:</span> Alexandra Centurión.</p>
+                          <div className="flex items-center gap-2">
+                            <p><span className="font-medium">Tarjeta:</span> 5579083041559523</p>
+                            <button
+                              onClick={() => navigator.clipboard.writeText('5579083041559523')}
+                              className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
+                            >
+                              Copiar
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p><span className="font-medium">Concepto:</span> Orden #{order.id}</p>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(`${order.id}`)}
+                              className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
+                            >
+                              Copiar
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-sm">Una vez realizada la transferencia, envía el comprobante por WhatsApp.</p>
+                      </div>
+                    )}
+
+                    {order.payment_method === 'efectivo' && (
+                      <div className="space-y-2">
+                        <p>Para completar tu compra en efectivo:</p>
+                        <div className="bg-blue-900/30 p-4 rounded-lg">
+                          <p>Acude a nuestras oficinas ubicadas en:</p>
+                          <p className="font-medium">Av. Universidad 123, Col. Centro</p>
+                          <p>Horario: Lunes a Viernes de 9:00 AM a 5:00 PM</p>
+                          <p>Menciona tu número de orden: #{order.id}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <p className="mt-4">
+                      Para cualquier duda,{' '}
+                      <a
+                        href="https://wa.me/5218180861794"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-tecmitalk-accent hover:underline"
+                      >
+                        contáctanos por WhatsApp
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+            <div>
+
+            </div>
+
 
             <div className="bg-blue-900/10 border border-blue-400/20 rounded-lg p-6">
               <h2 className="text-xl font-semibold text-white mb-4">Información de la Orden</h2>
@@ -121,66 +202,6 @@ export default function Pagado({ order, orderItems }: { order: Order, orderItems
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            {/* Instrucciones de pago */}
-            <div className="bg-blue-900/10 border border-blue-400/20 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">Instrucciones de Pago</h2>
-
-              <div className="space-y-4 text-gray-300">
-                {order.payment_method === 'transferencia' && (
-                  <div className="space-y-2">
-                    <p>Para completar tu compra, realiza una transferencia con los siguientes datos:</p>
-                    <div className="bg-blue-900/30 p-4 rounded-lg">
-                      <p><span className="font-medium">Banco:</span> Santander</p>
-                      <p><span className="font-medium">Titular:</span> Alexandra Centurión.</p>
-                      <div className="flex items-center gap-2">
-                        <p><span className="font-medium">Tarjeta:</span> 5579083041559523</p>
-                        <button
-                          onClick={() => navigator.clipboard.writeText('5579083041559523')}
-                          className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
-                        >
-                          Copiar
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <p><span className="font-medium">Concepto:</span> Orden #{order.id}</p>
-                        <button
-                          onClick={() => navigator.clipboard.writeText(`${order.id}`)}
-                          className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
-                        >
-                          Copiar
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-sm">Una vez realizada la transferencia, envía el comprobante por WhatsApp.</p>
-                  </div>
-                )}
-
-                {order.payment_method === 'efectivo' && (
-                  <div className="space-y-2">
-                    <p>Para completar tu compra en efectivo:</p>
-                    <div className="bg-blue-900/30 p-4 rounded-lg">
-                      <p>Acude a nuestras oficinas ubicadas en:</p>
-                      <p className="font-medium">Av. Universidad 123, Col. Centro</p>
-                      <p>Horario: Lunes a Viernes de 9:00 AM a 5:00 PM</p>
-                      <p>Menciona tu número de orden: #{order.id}</p>
-                    </div>
-                  </div>
-                )}
-
-                <p className="mt-4">
-                  Para cualquier duda,{' '}
-                  <a
-                    href="https://wa.me/5218180861794"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-tecmitalk-accent hover:underline"
-                  >
-                    contáctanos por WhatsApp
-                  </a>
-                </p>
               </div>
             </div>
           </div>

@@ -38,7 +38,7 @@ export interface OrderItem {
   quantity: number;
   unit_price: number;
   created_at: string;
-  tickets?: {
+  tickets: {
     name: string;
     description: string;
   }

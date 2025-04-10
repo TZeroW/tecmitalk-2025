@@ -13,7 +13,7 @@ export default function Header() {
             <div className="max-w-7xl mx-auto flex justify-between items-center">
                 <Link href="/" className="flex items-center space-x-3">
                     <Image
-                        src="logo_sin_fondo.png"
+                        src="/logo_sin_fondo.png"
                         alt="TECMITALK"
                         width={140}
                         height={48}
