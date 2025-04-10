@@ -2,6 +2,8 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { QrCode } from 'lucide-react';
+
 
 export default function ConfirmationPage() {
   const searchParams = useSearchParams();
@@ -119,6 +121,7 @@ export default function ConfirmationPage() {
             <Button className="w-full py-3 bg-tecmitalk-accent hover:bg-tecmitalk-accent/90">
               Volver al inicio
             </Button>
+            
           </Link>
         </div>
       </div>
