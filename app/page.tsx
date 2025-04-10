@@ -11,21 +11,26 @@ export default function Home() {
   const speakers = [
     {
       id: 1,
+      name: "Rocío Turner",
+      image: "rocio.jpg"
+    },
+    {
+      id: 2,
       name: "Adrían Garza",
       image: "1.svg"
     },
     {
-      id: 2,
+      id: 3,
       name: "Karla Morales",
       image: "2.svg"
     },
     {
-      id: 3,
+      id: 4,
       name: "Ana Delia García",
       image: "3.svg"
     },
     {
-      id: 4,
+      id: 5,
       name: "Melany Garza",
       image: "melanie.jpg"
     }
@@ -41,8 +46,8 @@ export default function Home() {
               <div className="space-y-6">
                 <h2 className="text-sm font-medium text-tecmitalk-accent mb-4 tracking-[0.2em]">#LEADYOURPATH</h2>
                 <h1 className="text-5xl md:text-6xl font-bold text-white leading-[1.15] tracking-tight">
-                  El evento
-                  <span className="bg-gradient-to-r from-tecmitalk-accent to-emerald-400 bg-clip-text text-transparent"> más importante del año</span>
+                  TecmiTalk 2025
+                  <span className="bg-gradient-to-r from-tecmitalk-accent to-emerald-400 bg-clip-text text-transparent block">Inspirar, aprender y conectar </span>
                 </h1>
               </div>
 
