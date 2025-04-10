@@ -45,9 +45,9 @@ export default function Footer() {
            </div>
          </div>
          
-         {/* <div className="mt-8 pt-8 border-t border-white/10 text-center">
-           <p className="text-sm font-medium">Creado con ❤️ por <a href="https://bysmax.com" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-tecmitalk-accent">bysmax</a>: María Fernanda, Emmanuel, Valeria y Gerson</p>
-         </div> */}
+         <div className="mt-8 pt-8 border-t border-white/10 text-center">
+           <p className="text-sm">Creado con ❤️ por <a href="https://bysmax.com" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-tecmitalk-accent">bysmax</a>: María Fernanda, Emmanuel, Valeria y Gerson</p>
+         </div>
        </div>
      </footer>
   )
