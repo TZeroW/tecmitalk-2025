@@ -135,8 +135,24 @@ export default function Pagado({ order, orderItems }: { order: Order, orderItems
                     <div className="bg-blue-900/30 p-4 rounded-lg">
                       <p><span className="font-medium">Banco:</span> BBVA</p>
                       <p><span className="font-medium">Titular:</span> TECMITALK A.C.</p>
-                      <p><span className="font-medium">CLABE:</span> 012580015678901234</p>
-                      <p><span className="font-medium">Concepto:</span> Orden #{order.id}</p>
+                      <div className="flex items-center gap-2">
+                        <p><span className="font-medium">CLABE:</span> 012580015678901234</p>
+                        <button
+                          onClick={() => navigator.clipboard.writeText('012580015678901234')}
+                          className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
+                        >
+                          Copiar
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <p><span className="font-medium">Concepto:</span> Orden #{order.id}</p>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(`${order.id}`)}
+                          className="px-2 py-1 text-sm bg-tecmitalk-accent/20 hover:bg-tecmitalk-accent/30 rounded-md transition-colors"
+                        >
+                          Copiar
+                        </button>
+                      </div>
                     </div>
                     <p className="text-sm">Una vez realizada la transferencia, envía el comprobante por WhatsApp.</p>
                   </div>
