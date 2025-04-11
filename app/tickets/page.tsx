@@ -221,17 +221,31 @@ export default function TicketsPage() {
         }
 
         // Actualizar contador de asistentes al taller
-        const { data, error } = await supabase.rpc('increment_workshop_attendees', {
-          workshop_id: parseInt(formData.selectedWorkshop),
-          increment_value: formData.quantity
-        });
+// 1. Primero obtenemos la orden de workshop para verificar la cantidad exacta
+      const { data: workshopOrder, error: workshopOrderError } = await supabase
+        .from('order_workshops')
+        .select('quantity')
+        .eq('order_id', order.id) // ID de la orden recién creada
+        .eq('workshop_id', formData.selectedWorkshop)
+        .single();
+
+      if (workshopError || !workshopOrder) {
+        console.error('Error al verificar la compra de boletos:', workshopError);
+        throw new Error('No se pudo confirmar la reserva en el taller');
+      }
+
+      // 2. Actualizamos usando la cantidad EXACTA de la orden
+      const { error: updateError } = await supabase.rpc('increment_workshop_attendees', {
+        workshop_id: parseInt(formData.selectedWorkshop), // Mantenemos el parseo a integer
+        increment_value: workshopOrder.quantity // Usamos la cantidad registrada en order_workshops
+      });
         console.log(formData.selectedWorkshop, formData.quantity);
 
         if (error) {
-          console.error('Error al actualizar asistentes:', error.message);
+          console.error('Error al actualizar asistentes:', error);
           alert('Ocurrió un error al actualizar asistentes.');
         } else {
-          console.log('Datos actualizados:', data);
+          console.log('Workshop attendees updated successfully');
         }
       }
 
