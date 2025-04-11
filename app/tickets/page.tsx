@@ -181,7 +181,6 @@ export default function TicketsPage() {
           customer_phone: formData.phone,
           payment_method: formData.paymentMethod,
           total_amount: totalAmount,
-          payment_status: 'pendiente',
           created_at: now
         })
         .select()
