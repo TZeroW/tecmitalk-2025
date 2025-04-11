@@ -48,9 +48,10 @@ export default function Header() {
                                 </svg>
                             </button>
                             <div className="space-y-8 pt-12 bg-[#14095D]">
-                                <a href="#speakers" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ponentes</a>
-                                <a href="#tickets" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Tickets</a>
-                                <a href="#location" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ubicación</a>
+                                <a href="/#speakers" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ponentes</a>
+                                <a href="/#talleres" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Talleres</a>
+                                <a href="/#tickets" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Tickets</a>
+                                <a href="/#location" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ubicación</a>
                             </div>
                             <div className="pt-12 space-y-6 w-full flex flex-col">
                                 <Link
@@ -67,9 +68,10 @@ export default function Header() {
 
                 {/* Menú desktop */}
                 <div className="hidden md:flex space-x-8">
-                    <a href="#speakers" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ponentes</a>
-                    <a href="#tickets" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Tickets</a>
-                    <a href="#location" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ubicación</a>
+                    <a href="/#speakers" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ponentes</a>
+                    <a href="/#talleres" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Talleres</a>
+                    <a href="/#tickets" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Tickets</a>
+                    <a href="/#location" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ubicación</a>
                 </div>
                 {/* Botones desktop */}
                 <div className='hidden md:flex gap-4 items-center'>

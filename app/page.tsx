@@ -170,7 +170,7 @@ export default function Home() {
           </div>
         </section>
         {/* Workshops Section */}
-        <section id="workshops" className="py-24 bg-gradient-to-b from-[#0D063A] to-[#14095D]">
+        <section id="talleres" className="py-24 bg-gradient-to-b from-[#0D063A] to-[#14095D]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20 space-y-4">
               <h3 className="text-4xl md:text-5xl font-bold text-white">
