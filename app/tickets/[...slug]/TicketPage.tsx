@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import NoPagado from "./NoPagado"
 import type { Order, OrderItem } from "@/app/types"
 import Pagado from "./Pagado"
 

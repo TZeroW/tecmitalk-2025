@@ -32,14 +32,16 @@ export interface Order {
 }
 
 export interface OrderItem {
-  id: string;
-  order_id: string;
+  id: number;
   ticket_id: number;
   quantity: number;
   unit_price: number;
   created_at: string;
+  order_id: string;
+  subtotal: number;
   tickets: {
     name: string;
     description: string;
   }
 }
+

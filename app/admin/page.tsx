@@ -9,6 +9,8 @@ import { PieChart as ReChartPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, Cartesi
 import { CAREERS, CAMPUSES, BOLETOSTYPE, PAYTYPE } from '@/app/data/constants';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Order, OrderItem } from '../types';
 
 
 interface Student {
@@ -39,6 +41,10 @@ export default function AdminPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [paymentData, setPaymentData] = useState<Array<{ name: string; value: number }>>([]);
+  const [ticketData, setTicketData] = useState<Array<{ name: string; value: number }>>([]);
+  const [orders_items, setOrders_items] = useState<OrderItem[]>([]);
+  const supabase = createClient()
   const [formData, setFormData] = useState({
     name: '',
     apellido: '',
@@ -59,8 +65,10 @@ export default function AdminPage() {
     searchId: ''
   });
 
+
+
   // Mover la función de filtrado dentro del componente
-  const filteredStudents = students.filter(student => {
+  const filteredOrders = students.filter(student => {
     return (
       (filters.ticketType === '' || student.typeticket === filters.ticketType) &&
       (filters.paymentType === '' || student.typepay === filters.paymentType) &&
@@ -70,15 +78,10 @@ export default function AdminPage() {
       (filters.searchId === '' || student.id.toLowerCase().includes(filters.searchId.toLowerCase()))
     );
   });
-  const [careerData, setCareerData] = useState<Array<{ name: string; value: number }>>([]);
-  const [userTypeData, setUserTypeData] = useState<Array<{ name: string; value: number }>>([]);
-  const [paymentData, setPaymentData] = useState<Array<{ name: string; value: number }>>([]);
-  const [ticketData, setTicketData] = useState<Array<{ name: string; value: number }>>([]);
+
 
   const handleDeleteConfirm = async () => {
     if (!itemToDelete) return;
-
-    const supabase = createClient();
 
     try {
       const { error: itemsError } = await supabase
@@ -239,12 +242,6 @@ export default function AdminPage() {
       careerCounts[careerName] = (careerCounts[careerName] || 0) + 1;
     });
 
-    const careerChartData = Object.entries(careerCounts)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5);
-    setCareerData(careerChartData);
-
     // Process user type data
     const userTypeCounts = {
       'Estudiantes': 0,
@@ -258,11 +255,6 @@ export default function AdminPage() {
         userTypeCounts['ExaTecmis']++;
       }
     });
-
-    const userTypeChartData = Object.entries(userTypeCounts)
-      .map(([name, value]) => ({ name, value }));
-    setUserTypeData(userTypeChartData);
-
     // Process payment status data
     const paymentCounts = {
       'Pagado': 0,
@@ -294,7 +286,7 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    const fetchStudents = async () => {
+    const getOrders = async () => {
       try {
         setIsLoading(true);
         const supabase = createClient();
@@ -317,8 +309,20 @@ export default function AdminPage() {
         setIsLoading(false);
       }
     };
+    const fetchOrders_items = async () => {
+      const { data: itemsData, error: itemsError } = await supabase
+        .from("order_items")
+        .select(`
+        *,
+        tickets:ticket_id (name, description)
+      `)
 
-    fetchStudents();
+      if (itemsError) throw itemsError;
+      setOrders_items(itemsData)
+    }
+
+    fetchOrders_items();
+    getOrders();
   }, []);
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
@@ -334,6 +338,8 @@ export default function AdminPage() {
     ) : null;
   };
 
+  console.log(filteredOrders)
+  console.log(orders_items[0])
   return (
     <div className="min-h-screen bg-custom-green py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -548,7 +554,7 @@ export default function AdminPage() {
                   value={filters.searchId}
                   onChange={(e) => setFilters({ ...filters, searchId: e.target.value })}
                 />
-                
+
                 {/* Filtro por Tipo de Boleto */}
                 <select
                   className="border p-2 rounded text-sm"
@@ -612,8 +618,7 @@ export default function AdminPage() {
                   <tr className="border-b">
                     <th className="text-left py-3 px-4">Nombre</th>
                     <th className="text-left py-3 px-4">Email</th>
-                    <th className="text-left py-3 px-4">Carrera</th>
-                    <th className="text-left py-3 px-4">Campus</th>
+                    <th className="text-left py-3 px-4">Estatus</th>
                     <th className="text-left py-3 px-4">Tipo de Boleto</th>
                     <th className="text-left py-3 px-4">Tipo de Pago</th>
                     <th className="text-left py-3 px-4">Estado de Pago</th>
@@ -621,14 +626,22 @@ export default function AdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.length > 0 ? (
-                    filteredStudents.map((student) => (
-                      <tr key={student.id} className="border-b hover:bg-gray-50">
-                        <td className="py-2 px-4">{student.customer_name} {student.apellido}</td>
-                        <td className="py-2 px-4">{student.customer_email}</td>
+                  {filteredOrders.length > 0 ? (
+                    filteredOrders.map((order) => (
+                      <tr key={order.id} className="border-b hover:bg-gray-50">
+                        <td className="py-2 px-4">{order.customer_name} {order.apellido}</td>
+                        <td className="py-2 px-4">{order.customer_email}</td>
                         <td className="py-2 px-4">
-                          <span className={`px-2 py-1 rounded-full text-xs ${student.paid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                            {student.paid ? 'Pagado' : 'Pendiente'}
+                          <span className={`px-2 py-1 rounded-full text-xs ${order.paid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {order.paid ? 'Pagado' : 'Pendiente'}
+                          </span>
+                        </td>
+                        <td>
+                          {orders_items.find((item: OrderItem) => item.order_id === order.id)?.tickets?.name || 'No encontrado'}
+                        </td>
+                        <td>
+                          <span className='font-bold'>
+                            {`$${orders_items.find((item: OrderItem) => item.order_id === order.id)?.subtotal}` || 'No encontrado'}
                           </span>
                         </td>
                         <td className="py-2 px-4">
@@ -636,12 +649,12 @@ export default function AdminPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleEdit(student)}
+                              onClick={() => handleEdit(order)}
                             >
                               Editar
                             </Button>
                             <Link
-                              href={`/tickets/${student.id}`}
+                              href={`/tickets/${order.id}`}
                               className={buttonVariants({ variant: 'outline' })}
                             >
                               Ver
@@ -650,7 +663,7 @@ export default function AdminPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                const url = `${window.location.origin}/tickets/${student.id}`;
+                                const url = `${window.location.origin}/tickets/${order.id}`;
                                 navigator.clipboard.writeText(url);
                                 toast.success('URL copiada al portapapeles');
                               }}
@@ -661,7 +674,7 @@ export default function AdminPage() {
                               variant="destructive"
                               size="sm"
                               onClick={() => {
-                                setItemToDelete({ id: student.id });
+                                setItemToDelete({ id: order.id });
                                 setIsDeleteDialogOpen(true);
                               }}
                             >
@@ -833,7 +846,7 @@ export default function AdminPage() {
           )}
         </DialogContent>
         <DialogFooter>
-          
+
         </DialogFooter>
       </Dialog>
     </div>
