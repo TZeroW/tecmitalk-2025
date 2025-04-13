@@ -19,11 +19,42 @@ export default function Home() {
     setOpenWorkshopId(openWorkshopId === id ? null : id)
   }
   const speakers = [
-    { id: 1, name: "Rocío Turner", image: "rocio.jpg" },
-    { id: 2, name: "Adrían Garza", image: "1.svg" },
-    { id: 3, name: "Karla Morales", image: "2.svg" },
-    { id: 4, name: "Ana Delia García", image: "3.svg" },
-    { id: 5, name: "Melany Garza", image: "melanie.jpg" }
+    {
+      id: 1,
+      name: "Rocío Turner",
+      image: "rocio.jpg",
+      description: "Creadora de contenido y host de Date Cuenta Podcast. Con 1.3M de seguidores en TikTok, usa el humor para hablar de salud mental y romper estigmas. 💬🧠"
+    },
+    {
+      id: 2,
+      name: "Adrían Garza",
+      image: "1.svg",
+      description: "Conocido como Mr. Hillman, emprendedor regiomontano fundador de Hillman Eyewear. Su marca es líder en Latinoamérica gracias a estrategias innovadoras de marketing. 🔥"
+    },
+    {
+      id: 3,
+      name: "Karla Morales",
+      image: "2.svg",
+      description: "Nutrióloga especializada en TCA y Psicología de la Alimentación. Influencer con +900k seguidores, transformando la manera de entender la nutrición. 💚"
+    },
+    {
+      id: 4,
+      name: "Ana Delia García",
+      image: "3.svg",
+      description: "Experta en humanidades, género y cultura con 25 años de experiencia académica. Líder en políticas públicas con perspectiva de género. 🎓"
+    },
+    {
+      id: 5,
+      name: "Javier Muñoz",
+      image: "javier.jpg",
+      description: "Creador de contenido fitness que inspira a miles. Colaborador de Gymshark y YoungLA, compartiendo su transformación física y personal. 💪"
+    },
+    {
+      id: 6,
+      name: "Melany Garza",
+      image: "melanie.jpg",
+      description: "Comunicóloga y locutora con 10+ años transformando medios. Conductora en Amor 90.9 FM y voz de grandes marcas como Netflix y HBO MAX. 🎙️"
+    }
   ]
 
   useEffect(() => {
@@ -74,7 +105,7 @@ export default function Home() {
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                 Visita Empresarial 30
+                  Visita Empresarial 30
                 </div>
                 <div className="inline-flex items-center border border-white/30 rounded-full px-4 py-2 text-white/90 backdrop-blur-sm hover:bg-white/5 transition-colors">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -92,17 +123,17 @@ export default function Home() {
               </div>
             </div>
             <div className="w-full lg:max-w-2xl transform hover:scale-[1.02] transition-transform duration-300 ease-out">
-          <div className="relative w-full" style={{ aspectRatio: '16/7.2' }}> 
-            <Image
-              src="/boleto_priority.svg"
-              alt="boleto_priority"
-              layout="fill"  
-              objectFit="cover"
-              objectPosition="left"   
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
+              <div className="relative w-full" style={{ aspectRatio: '16/7.2' }}>
+                <Image
+                  src="/boleto_priority.svg"
+                  alt="boleto_priority"
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="left"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -159,7 +190,9 @@ export default function Home() {
                       height={400}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
+                      <p className="text-white text-center mb-16">{speaker.description}</p>
+                    </div>
                   </div>
                   <div className="p-6 bg-white/5 backdrop-blur-lg border-t border-white/10">
                     <h4 className="text-xl font-semibold text-white">{speaker.name}</h4>
@@ -182,9 +215,8 @@ export default function Home() {
               {workshops.map((workshop) => (
                 <div
                   key={workshop.id}
-                  className={`relative overflow-hidden rounded-2xl group transition-all duration-500 bg-white/5 backdrop-blur-lg border ${
-                    openWorkshopId === workshop.id ? "border-[#2DDC2F] scale-105 shadow-2xl shadow-tecmitalk-accent/20" : "border-white/10"
-                  } hover:border-[#2DDC2F]`}
+                  className={`relative overflow-hidden rounded-2xl group transition-all duration-500 bg-white/5 backdrop-blur-lg border ${openWorkshopId === workshop.id ? "border-[#2DDC2F] scale-105 shadow-2xl shadow-tecmitalk-accent/20" : "border-white/10"
+                    } hover:border-[#2DDC2F]`}
                 >
                   <div className="p-6 space-y-4">
                     <h4 className="text-xl font-bold text-white">
@@ -204,18 +236,17 @@ export default function Home() {
                     >
                       <summary className="cursor-pointer text-tecmitalk-accent hover:text-tecmitalk-accent/80 transition-colors flex items-center">
                         <span>Ver más detalles</span>
-                        <svg 
-                          className={`w-4 h-4 ml-2 transition-transform duration-300 ${openWorkshopId === workshop.id ? 'rotate-180' : ''}`} 
-                          fill="none" 
-                          stroke="currentColor" 
+                        <svg
+                          className={`w-4 h-4 ml-2 transition-transform duration-300 ${openWorkshopId === workshop.id ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </summary>
-                      <div className={`mt-4 transition-all duration-500 ease-in-out ${
-                        openWorkshopId === workshop.id ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-                      }`}>
+                      <div className={`mt-4 transition-all duration-500 ease-in-out ${openWorkshopId === workshop.id ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+                        }`}>
                         <p className="mt-2 text-white/90">{workshop.description_workshop || "Sin descripción disponible."}</p>
                         <div className="mt-6 space-y-3 bg-white/5 p-4 rounded-lg border border-tecmitalk-accent/20">
                           <span className="text-tecmitalk-accent font-bold text-lg block animate-pulse">
@@ -224,8 +255,8 @@ export default function Home() {
                           <span className="text-white/80 text-sm block">
                             ¡No te pierdas la oportunidad de ser parte de este taller exclusivo!
                           </span>
-                          <Link 
-                            href="/tickets" 
+                          <Link
+                            href="/tickets"
                             className="inline-block w-full text-center mt-2 text-sm bg-tecmitalk-accent hover:bg-tecmitalk-accent/90 text-white px-4 py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
                           >
                             Reserva tu lugar ahora →
@@ -236,7 +267,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-            </div> 
+            </div>
           </div>
         </section>
 
@@ -253,7 +284,7 @@ export default function Home() {
             </div>
 
             <div className="mt-12 text-center">
-              <Link 
+              <Link
                 href="/tickets"
                 className="inline-block bg-tecmitalk-accent hover:bg-tecmitalk-accent/90 text-white px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300 transform hover:scale-105"
               >
@@ -292,10 +323,10 @@ export default function Home() {
                     </svg>
                     <div>
                       <h4 className="text-white font-medium">Contacto</h4>
-                      <p className="text-gray-300">Para preguntas sobre el evento: 
-                        <a 
-                          href="https://wa.me/5218180861794" 
-                          target="_blank" 
+                      <p className="text-gray-300">Para preguntas sobre el evento:
+                        <a
+                          href="https://wa.me/5218180861794"
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-tecmitalk-accent hover:underline ml-1"
                         >
