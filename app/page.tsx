@@ -4,6 +4,7 @@ import Location from '@/components/sections/Location'
 import Tickets from '@/components/sections/Tickets'
 import Talleres from '@/components/sections/Talleres'
 import Ponentes from '@/components/sections/Ponentes'
+import VisitaEmpresarial from '@/components/sections/VisitaEmpresarial'
 
 export default function Home() {
 
@@ -107,6 +108,9 @@ export default function Home() {
         <Ponentes />
         {/* Workshops Section */}
         <Talleres />
+        
+        {/* Visita Empresarial Section */}
+        <VisitaEmpresarial />
 
         {/* Tickets Section */}
         <Tickets />

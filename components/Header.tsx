@@ -50,6 +50,7 @@ export default function Header() {
                             <div className="space-y-8 pt-12 bg-[#14095D]">
                                 <a href="/#speakers" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ponentes</a>
                                 <a href="/#talleres" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Talleres</a>
+                                <a href="/#visita-empresarial" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Visita Empresarial</a>
                                 <a href="/#tickets" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Tickets</a>
                                 <a href="/#location" className="block text-white/90 hover:text-tecmitalk-accent text-2xl font-medium" onClick={() => setIsMenuOpen(false)}>Ubicación</a>
                             </div>
@@ -70,6 +71,7 @@ export default function Header() {
                 <div className="hidden md:flex space-x-8">
                     <a href="/#speakers" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ponentes</a>
                     <a href="/#talleres" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Talleres</a>
+                    <a href="/#visita-empresarial" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Visita Empresarial</a>
                     <a href="/#tickets" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Tickets</a>
                     <a href="/#location" className="text-white/90 hover:text-tecmitalk-accent text-[17px] font-medium transition-colors duration-200">Ubicación</a>
                 </div>
